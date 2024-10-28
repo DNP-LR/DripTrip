@@ -25,6 +25,14 @@ module.exports = {
       itemText: '#575756',
       oney: '#81BC00',
     },
+    screens: {
+      sm: '360px',
+      lt: '425px',
+      ls: '600px',
+      md: '768px',
+      lg: '1024px',
+      xl: '1280px',
+    },
     dropShadow: {
       main: '0px 1px 20px #2E145924',
       button: '0px 0px 10px #25CA7A',
