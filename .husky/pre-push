@@ -27,7 +27,7 @@ build_status=$?
 if  [ "$lint_status" != 0 ]  || [ "$build_status" != 0 ]; then
 #  || [ "$format_status" != 0 ]
 #[ "$test_status" != 0 ] ||
-  echo "$(tput setaf 1)Pre-push checks failed. Push aborted.$(tput sgr0)"
+  echo "$(tput setaf 1) Pre-push checks failed. Push aborted.$(tput sgr0)"
   exit 1
 fi
 
@@ -37,4 +37,4 @@ curl -X POST -H 'Content-type: application/json' \
 --data "{\"text\":\"Push completed by $(logname) on branch $(git rev-parse --abbrev-ref HEAD) with commit: $(git log -1 --pretty=%B)\"}" \
 "$WEBHOOK_URL"
 
-echo "$(tput setaf 2)Pre-push checks passed. Proceeding with push.$(tput sgr0)"
+echo "$(tput setaf 2) Pre-push checks passed. Proceeding with push.$(tput sgr0)"
