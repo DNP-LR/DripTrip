@@ -42,9 +42,7 @@ module.exports = {
       input: '0px 3px 3px #3A48632E',
     },
     fontFamily: {
-      'inter-regular': ['inter-regular', 'sans-serif'],
-      'inter-medium': ['inter-medium', 'sans-serif'],
-      'inter-bold': ['inter-bold', 'sans-serif'],
+      inter: ['Inter', 'sans-serif'],
     },
   },
   plugins: [],
