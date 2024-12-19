@@ -1,2 +1,9 @@
-<h1 class="text-3xl font-bold underline"> Hello, {{ title }} </h1>
-<h1> Hello, DripTrip</h1>
+<div class="w-[50%] bg-secondary">
+  ewe
+  <app-button />
+
+
+</div>
+
+
+<app-input-field />
