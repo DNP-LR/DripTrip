@@ -1,9 +1,0 @@
-<div class="w-[50%] bg-secondary">
-  ewe
-  <app-button />
-
-
-</div>
-
-
-<app-input-field />
