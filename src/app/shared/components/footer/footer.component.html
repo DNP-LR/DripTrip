@@ -1,0 +1,17 @@
+<footer class="bg-gray-800 text-white">
+  <div
+    class="container mx-auto py-6 flex flex-col md:flex-row justify-between items-center">
+    <div class="mb-4 md:mb-0"> &copy; 2025 DripTrip. All rights reserved. </div>
+    <div>
+      <ul class="flex space-x-4">
+        @for (footer of footerItems; track footer) {
+          <li
+            ><a [routerLink]="footer.link" class="hover:text-secondary">{{
+              footer.title
+            }}</a></li
+          >
+        }
+      </ul>
+    </div>
+  </div>
+</footer>

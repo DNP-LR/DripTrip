@@ -1,0 +1,48 @@
+<header class="bg-primary text-white shadow-md fixed w-full">
+  <div class="container mx-auto flex justify-between items-center p-4">
+    <div class="text-2xl font-display">
+      <a routerLink="/">DripTrip</a>
+    </div>
+    <div class="md:hidden">
+      <button
+        (click)="toggleMenu()"
+        id="menu-button"
+        class="focus:outline-none">
+        <svg
+          class="w-8 h-8 text-white"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 24 24"
+          stroke="currentColor">
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M4 6h16M4 12h16m-7 6h7" />
+        </svg>
+      </button>
+    </div>
+    <nav id="menu" class="hidden md:flex md:items-center">
+      <ul class="flex space-x-4">
+        @for (header of headerItems; track header) {
+          <li
+            ><a [routerLink]="header.link" class="hover:text-secondary">{{
+              header.title
+            }}</a></li
+          >
+        }
+      </ul>
+    </nav>
+  </div>
+  <nav id="mobile-menu" class="md:hidden hidden items-center">
+    <ul class="flex flex-col space-y-2 p-4 bg-primary-dark text-white">
+      @for (header of headerItems; track header) {
+        <li
+          ><a [href]="header.link" class="hover:text-secondary">{{
+            header.title
+          }}</a></li
+        >
+      }
+    </ul>
+  </nav>
+</header>

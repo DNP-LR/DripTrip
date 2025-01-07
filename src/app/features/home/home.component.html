@@ -1,1 +1,125 @@
-<p i18n="description|tooltip for welcome message">Welcome to our website!</p>
+<main class="bg-background min-h-screen">
+  <section
+    class="hero grid grid-cols-1 md:grid-cols-2 bg-primary text-white py-20">
+    <div class="flex justify-center items-center order-1 md:order-2">
+      <img
+        class="w-full h-auto"
+        src="home/city-bus-animate.svg"
+        alt="City Bus" />
+    </div>
+    <div
+      class="flex flex-col justify-center items-center text-center md:text-left order-2 md:order-1">
+      <h1 class="text-5xl font-display mb-6">Book Your Bus Tickets Easily</h1>
+      <p class="text-lg mb-8"
+        >Quick and convenient bus ticket reservations at your fingertips.</p
+      >
+      <a
+        routerLink="/signIn"
+        class="bg-secondary text-white py-3 px-8 rounded shadow-lg hover:bg-secondary-hover transition duration-300">
+        Start Booking
+      </a>
+    </div>
+  </section>
+  <section class="features py-20">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-display text-primary text-center mb-12"
+        >Why Choose Us?</h2
+      >
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div
+          class="feature-item bg-white p-6 rounded-2xl shadow-lg text-center">
+          <div class="mb-4">
+            <svg
+              class="w-12 h-12 text-secondary mx-auto"
+              fill="currentColor"
+              viewBox="0 0 24 24">
+              <path d="..."></path>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-semibold text-primary mb-2"
+            >Convenient Booking</h3
+          >
+          <p class="text-gray-700"
+            >Book tickets from the comfort of your home at any time.</p
+          >
+        </div>
+        <div
+          class="feature-item bg-white p-6 rounded-2xl shadow-lg text-center">
+          <div class="mb-4">
+            <svg
+              class="w-12 h-12 text-secondary mx-auto"
+              fill="currentColor"
+              viewBox="0 0 24 24">
+              <path d="..."></path>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-semibold text-primary mb-2"
+            >Affordable Prices</h3
+          >
+          <p class="text-gray-700">Get the best prices with no hidden fees.</p>
+        </div>
+        <div
+          class="feature-item bg-white p-6 rounded-2xl shadow-lg text-center">
+          <div class="mb-4">
+            <svg
+              class="w-12 h-12 text-secondary mx-auto"
+              fill="currentColor"
+              viewBox="0 0 24 24">
+              <path d="..."></path>
+            </svg>
+          </div>
+          <h3 class="text-2xl font-semibold text-primary mb-2"
+            >Reliable Service</h3
+          >
+          <p class="text-gray-700"
+            >Trust in our reliable service for a smooth journey.</p
+          >
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="testimonials bg-gray-100 py-20">
+    <div class="container mx-auto px-4">
+      <h2 class="text-4xl font-display text-primary text-center mb-12"
+        >What Our Customers Say</h2
+      >
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="testimonial bg-white p-6 rounded-2xl shadow-lg">
+          <p class="text-gray-700 mb-4"
+            >"The booking process was seamless and the prices were
+            unbeatable!"</p
+          >
+          <p class="text-secondary font-semibold">- John Doe</p>
+        </div>
+        <div class="testimonial bg-white p-6 rounded-2xl shadow-lg">
+          <p class="text-gray-700 mb-4"
+            >"I love how easy it is to book tickets, and the service is
+            top-notch."</p
+          >
+          <p class="text-secondary font-semibold">- Jane Smith</p>
+        </div>
+        <div class="testimonial bg-white p-6 rounded-2xl shadow-lg">
+          <p class="text-gray-700 mb-4"
+            >"Reliable and affordable, I always use this service for my
+            travels."</p
+          >
+          <p class="text-secondary font-semibold">- Alice Johnson</p>
+        </div>
+      </div>
+    </div>
+  </section>
+  <section class="cta bg-primary text-white py-20">
+    <div class="container mx-auto px-4 text-center">
+      <h2 class="text-4xl font-display mb-6">Ready to Start Your Journey?</h2>
+      <p class="text-lg mb-8"
+        >Book your bus tickets today and enjoy a hassle-free travel
+        experience.</p
+      >
+      <a
+        routerLink="/signIn"
+        class="bg-secondary text-white py-3 px-8 rounded-xl shadow-lg hover:bg-secondary-hover transition duration-300">
+        Book Now
+      </a>
+    </div>
+  </section>
+</main>
