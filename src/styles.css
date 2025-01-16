@@ -2,10 +2,3 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
-
-/* Global font settings */
-@layer base {
-  body {
-    font-family: 'Poppins', sans-serif;
-  }
-}
