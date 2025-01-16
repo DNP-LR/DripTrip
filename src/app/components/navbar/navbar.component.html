@@ -10,7 +10,7 @@
         </a>
       </div>
       <!-- Separate desktop navigation to ensure better organization and responsive design -->
-      <div class="max-lg:hidden lg:flex space-x-8">
+      <div class="max-custom:hidden custom:flex space-x-8">
         <a
           href="/"
           class="text-white hover:text-background-light px-3 py-2 rounded-md text-lg font-medium font-poppins"
@@ -34,7 +34,7 @@
       </div>
 
       <!-- Mobile Menu Toggle Button - Visible on Medium and Small Screens -->
-      <div class="md:hidden">
+      <div class="custom:hidden">
         <button
           (click)="toggleMobileMenu()"
           (keydown.enter)="toggleMobileMenu()"
@@ -59,10 +59,10 @@
 
   <!-- Mobile Menu that slides in from the left -->
   <div
-    class="fixed inset-y-0 left-0 w-64 bg-background transform transition-transform duration-300 ease-in-out md:hidden shadow-lg"
+    class="fixed inset-y-0 left-0 w-64 bg-background transform transition-transform duration-300 ease-in-out custom:hidden"
     [ngClass]="{
       'translate-x-0': isMobileMenuOpen,
-      '-translate-x-full': !isMobileMenuOpen
+      '-translate-x-full': !isMobileMenuOpen,
     }">
     <!-- Mobile Menu Content -->
     <div class="flex flex-col h-full">
@@ -97,7 +97,7 @@
   <!-- Overlay -->
   <div
     [ngClass]="{
-      'fixed inset-0 bg-black bg-opacity-50 md:hidden': isMobileMenuOpen,
+      'fixed inset-0 bg-black bg-opacity-50 custom:hidden': isMobileMenuOpen,
     }"
     (click)="toggleMobileMenu()"
     (keydown.enter)="toggleMobileMenu()"
