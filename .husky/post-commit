@@ -1,0 +1,18 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "$(tput setaf 2)Running post-commit tasks...$(tput sgr0)"
+
+# Check if WEBHOOK_URL is set
+if [ -z "$WEBHOOK_URL" ]; then
+  echo "$(tput setaf 1)Error: WEBHOOK_URL is not set. Please check your .env file.$(tput sgr0)"
+  exit 1
+fi
+
+# Send notification using the WEBHOOK_URL from the .env file
+echo "$(tput setaf 2)Sending commit notification...$(tput sgr0)"
+curl -X POST -H "Content-Type: application/json" \
+  -d "{\"text\":\"New commit made by $(logname) on branch $(git rev-parse --abbrev-ref HEAD) with message: $(git log -1 --format=%B)\"}" \
+  "$WEBHOOK_URL"
+
+echo "$(tput setaf 2)Post-commit tasks completed.$(tput sgr0)"
