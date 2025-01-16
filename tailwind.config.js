@@ -3,6 +3,12 @@ module.exports = {
   content: ['./src/**/*.{html,ts}'],
   theme: {
     extend: {
+      screens: {
+        custom: '992px',
+      },
+      fontFamily: {
+        poppins: ['Poppins', 'sans-serif'],
+      },
       colors: {
         transparent: 'transparent',
         current: 'currentColor',
