@@ -9,10 +9,12 @@ import { CommonModule } from '@angular/common';
   imports: [CommonModule],
 })
 export class NavbarComponent {
-  public isMobileMenuOpen: boolean; // Keep the type but initialize in the constructor
+  // Mobile menu state managed in constructor to ensure proper lifecycle management
+  public isMobileMenuOpen: boolean;
 
   constructor() {
-    this.isMobileMenuOpen = false; // Initialize here
+    // Initialize as false to prevent menu from being open on page load
+    this.isMobileMenuOpen = false;
   }
 
   public toggleMobileMenu(): void {
