@@ -1,4 +1,4 @@
-<nav class="bg-blue-600">
+<nav class="bg-background">
   <div class="max-w-6xl mx-auto px-4">
     <div class="flex justify-between items-center h-16">
       <!-- Using flex container for logo and brand name to maintain consistent spacing and alignment -->
@@ -13,22 +13,22 @@
       <div class="max-lg:hidden lg:flex space-x-8">
         <a
           href="/"
-          class="text-white hover:text-gray-200 px-3 py-2 rounded-md text-lg font-medium font-poppins"
+          class="text-white hover:text-background-light px-3 py-2 rounded-md text-lg font-medium font-poppins"
           >Home</a
         >
         <a
           href="/about"
-          class="text-white hover:text-gray-200 px-3 py-2 rounded-md text-lg font-medium font-poppins"
+          class="text-white hover:text-background-light px-3 py-2 rounded-md text-lg font-medium font-poppins"
           >About</a
         >
         <a
           href="/services"
-          class="text-white hover:text-gray-200 px-3 py-2 rounded-md text-lg font-medium font-poppins"
+          class="text-white hover:text-background-light px-3 py-2 rounded-md text-lg font-medium font-poppins"
           >Services</a
         >
         <a
           href="/contact"
-          class="text-white hover:text-gray-200 px-3 py-2 rounded-md text-lg font-medium font-poppins"
+          class="text-white hover:text-background-light px-3 py-2 rounded-md text-lg font-medium font-poppins"
           >Contact</a
         >
       </div>
@@ -39,7 +39,7 @@
           (click)="toggleMobileMenu()"
           (keydown.enter)="toggleMobileMenu()"
           tabindex="0"
-          class="text-white p-2 rounded-md hover:bg-blue-700 focus:outline-none"
+          class="text-white p-2 rounded-md hover:bg-background-dark focus:outline-none"
           aria-label="Toggle mobile menu">
           <svg
             class="h-6 w-6"
@@ -57,33 +57,38 @@
     </div>
   </div>
 
-  <!-- Mobile Menu  that slides in from the left -->
+  <!-- Mobile Menu that slides in from the left -->
   <div
-    class="fixed inset-y-0 left-0 w-64 bg-blue-600 transform transition-transform duration-300 ease-in-out md:hidden shadow-lg"
+    class="fixed inset-y-0 left-0 w-64 bg-background transform transition-transform duration-300 ease-in-out md:hidden shadow-lg"
     [ngClass]="{
       'translate-x-0': isMobileMenuOpen,
-      '-translate-x-full': !isMobileMenuOpen,
+      '-translate-x-full': !isMobileMenuOpen
     }">
     <!-- Mobile Menu Content -->
     <div class="flex flex-col h-full">
-      <!-- Logo Section -->
       <div class="p-4">
         <a href="/" class="text-white text-xl font-bold">DripTrip</a>
       </div>
-
-      <!-- Mobile Menu Links -->
       <nav class="flex-1 px-4 py-2">
-        <a href="/Home" class="block py-2 text-white hover:text-gray-300"
+        <a
+          href="/"
+          class="block px-4 py-2 text-white hover:text-background-light rounded-md"
           >Home</a
         >
-        <a href="/about" class="block py-2 text-white hover:text-gray-300"
+        <a
+          href="/about"
+          class="block px-4 py-2 text-white hover:text-background-light rounded-md"
           >About</a
         >
-        <a href="/contact" class="block py-2 text-white hover:text-gray-300"
-          >Contact</a
-        >
-        <a href="/Services" class="block py-2 text-white hover:text-gray-300"
+        <a
+          href="/services"
+          class="block px-4 py-2 text-white hover:text-background-light rounded-md"
           >Services</a
+        >
+        <a
+          href="/contact"
+          class="block px-4 py-2 text-white hover:text-background-light rounded-md"
+          >Contact</a
         >
       </nav>
     </div>
