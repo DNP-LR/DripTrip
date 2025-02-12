@@ -3,13 +3,11 @@
 
 echo "$(tput setaf 2)Running post-commit tasks...$(tput sgr0)"
 
-# Ensure the WEBHOOK_URL environment variable is set from the user's environment
 if [ -z "$WEBHOOK_URL" ]; then
   echo "$(tput setaf 1)Error: WEBHOOK_URL is not set. Please configure the environment variable in your system settings.$(tput sgr0)"
   exit 1
 fi
 
-# Send notification using the WEBHOOK_URL from the user's environment
 echo "$(tput setaf 2)Sending commit notification...$(tput sgr0)"
 curl -X POST -H 'Content-type: application/json' \
 --data "{\"text\":\"New commit made by $(logname) on branch $(git rev-parse --abbrev-ref HEAD) with message: $(git log -1 --format=%B)\"}" \
