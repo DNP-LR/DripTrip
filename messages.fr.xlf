@@ -1,4 +1,0 @@
-<trans-unit id="welcome" datatype="html">
-  <source>Welcome to our website!</source>
-  <target>Bienvenue sur notre site web!</target>
-</trans-unit>
