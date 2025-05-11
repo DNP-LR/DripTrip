@@ -1,7 +1,15 @@
-<nav class="sticky top-0 z-50 bg-white text-base py-4 shadow-md font-urbanist">
+<nav [@navbarVisibility]="menuState.isNavbarVisible ? 'visible' : 'hidden'"
+     [ngClass]="{
+       'bg-white text-primary': !menuState.isOnDarkBackground,
+       'bg-primary text-white': menuState.isOnDarkBackground,
+       'shadow-md': menuState.isNavbarVisible
+     }"
+     class="sticky top-0 z-50 text-base py-4 font-urbanist transition-all duration-300">
   <div class="container mx-auto px-4 flex justify-between items-center">
     <div class="text-2xl font-bold">
-      <a [routerLink]="'/'" class="text-primary hover:text-accent transition duration-300">DripTrip</a>
+      <a [routerLink]="'/'"
+         [ngClass]="{'text-primary': !menuState.isOnDarkBackground, 'text-white': menuState.isOnDarkBackground}"
+         class="hover:text-accent transition duration-300">DripTrip</a>
     </div>
 
     <div class="hidden text-base md:flex space-x-8 font-medium">

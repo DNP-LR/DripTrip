@@ -12,6 +12,11 @@ export interface MenuState {
   };
   notificationsOpen: boolean;
   userProfileOpen: boolean;
+
+  // Enhanced navbar properties
+  isNavbarVisible: boolean;
+  lastScrollPosition: number;
+  isOnDarkBackground: boolean;
 }
 
 @Injectable({
@@ -28,7 +33,12 @@ export class MenuStateService {
       highContrast: false
     },
     notificationsOpen: false,
-    userProfileOpen: false
+    userProfileOpen: false,
+
+    // Enhanced navbar default values
+    isNavbarVisible: true,
+    lastScrollPosition: 0,
+    isOnDarkBackground: false
   };
 
   private _menuState = new BehaviorSubject<MenuState>(this.initialState);
@@ -90,7 +100,9 @@ export class MenuStateService {
     const currentState = this._menuState.value;
     this._menuState.next({
       ...currentState,
-      activeDropdown: null
+      activeDropdown: null,
+      notificationsOpen: false,
+      userProfileOpen: false
     });
   }
 
@@ -165,6 +177,36 @@ export class MenuStateService {
       ...currentState,
       userProfileOpen: !currentState.userProfileOpen,
       notificationsOpen: false // Close notifications when opening user profile
+    });
+  }
+
+  /**
+   * Update navbar visibility based on scroll position
+   * @param scrollPosition Current scroll position
+   */
+  updateNavbarVisibility(scrollPosition: number): void {
+    const currentState = this._menuState.value;
+    const isScrollingDown = scrollPosition > currentState.lastScrollPosition;
+
+    // Only hide navbar when scrolling down and not at the top of the page
+    const shouldHideNavbar = isScrollingDown && scrollPosition > 100;
+
+    this._menuState.next({
+      ...currentState,
+      isNavbarVisible: !shouldHideNavbar,
+      lastScrollPosition: scrollPosition
+    });
+  }
+
+  /**
+   * Update navbar styling based on background brightness
+   * @param isOnDarkBackground Whether the navbar is over a dark background
+   */
+  updateNavbarBackground(isOnDarkBackground: boolean): void {
+    const currentState = this._menuState.value;
+    this._menuState.next({
+      ...currentState,
+      isOnDarkBackground
     });
   }
 }

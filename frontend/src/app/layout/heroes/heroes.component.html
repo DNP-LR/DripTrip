@@ -1,58 +1,103 @@
-<section class="relative h-screen">
-  <div class="absolute inset-0 overflow-hidden">
-    <video
-      class="absolute w-full h-full object-cover"
-      autoplay
-      muted
-      loop
-      playsinline
-    >
-      <source src="/src/videos/cameroon-background.mp4" type="video/mp4">
-      <!-- Fallback image if video doesn't load -->
-      <img src="https://source.unsplash.com/random/1920x1080/?cameroon,landscape" alt="Cameroon Landscape"
-           class="w-full h-full object-cover">
-    </video>
-    <!-- Overlay Gradient: Earth Clay to black for legibility -->
-    <div class="absolute inset-0 bg-gradient-to-b from-primary/70 to-base-dark/90"></div>
+<section class="relative w-full h-screen">
+  <div class="fixed top-0 left-0 w-full h-full" style="z-index: -1;">
+    <ng-container *ngFor="let video of backgroundVideos; let i = index">
+      <video
+        *ngIf="currentVideoIndex === i"
+        [@fadeAnimation]
+        class="absolute top-0 left-0 w-full h-full object-cover"
+        autoplay
+        muted
+        loop
+        playsinline
+        style="filter: blur(3px);"
+      >
+        <source [src]="video.src" [type]="video.type">
+        <img src="https://source.unsplash.com/random/1920x1080/?cameroon,landscape" [alt]="video.alt"
+             class="w-full h-full object-cover">
+      </video>
+    </ng-container>
   </div>
 
-  <!-- Content -->
+  <div class="absolute inset-0 overflow-hidden">
+    <div class="absolute inset-0 bg-tropical-blue/50 z-20"></div>
+    <div class="absolute inset-0 bg-gradient-to-b from-tropical-blue/30 to-obsidian-black/20 z-10"></div>
+    <div class="absolute inset-0 z-0" style="background-color: var(--color-base); opacity: 0.6;"></div>
+  </div>
+
   <div class="relative container mx-auto px-4 h-full flex flex-col justify-center items-center text-center text-white">
-    <!-- Headline -->
-    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">Discover Cameroon Like Never Before</h1>
+    <h1 class="text-white font-bold text-4xl sm:text-6xl md:text-7xl">Discover Cameroon Like Never Before</h1>
 
-    <!-- Subheading -->
-    <p class="text-xl md:text-2xl mb-8 max-w-3xl">Experience the rich cultural heritage, breathtaking landscapes, and
-      vibrant traditions of Africa's hidden gem.</p>
+    <p class="text mt-4">From cultural wonders to hidden gems—your adventure starts here.</p>
 
-    <!-- CTA Buttons -->
-    <div class="flex flex-col sm:flex-row gap-4 mb-12">
-      <a href="#"
-         class="bg-primary/80 hover:bg-primary text-white px-6 py-3 rounded-full text-lg font-semibold transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-        Start Exploring
-      </a>
-      <a href="#"
-         class="bg-white/30 hover:bg-white/40 border-2 border-white/60 text-white px-6 py-3 rounded-full text-lg font-semibold transition duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl transform hover:-translate-y-1">
-        Learn More
-      </a>
-    </div>
+<!--    <div class="bg-white rounded-full p-3 flex flex-col md:flex-row gap-2 mt-6 shadow-lg w-full max-w-4xl">-->
+<!--      <div class="flex-1 px-4 py-2">-->
+<!--        <label for="location" class="block text-gray-700 text-sm font-medium mb-1">Location</label>-->
+<!--        <input-->
+<!--          type="text"-->
+<!--          id="location"-->
+<!--          placeholder="Where to?"-->
+<!--          class="w-full text-gray-800 focus:outline-none"-->
+<!--          [(ngModel)]="searchLocation"-->
+<!--          name="location"-->
+<!--        >-->
+<!--      </div>-->
 
-    <!-- Search Input Field -->
-    <div class="w-full max-w-2xl">
-      <div class="relative">
-        <input
-          type="text"
-          placeholder="Where do you want to go?"
-          class="w-full px-6 py-4 rounded-full text-base bg-white/30 backdrop-blur-md border border-white/50 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-primary shadow-lg"
-        >
+
+
+<!--      <div class="px-4 py-2 flex items-end">-->
+<!--        <button-->
+<!--          class="bg-tropical-blue text-white px-6 py-2 rounded-full hover:bg-[#5A9BFD] transition"-->
+<!--          (click)="search()"-->
+<!--        >-->
+<!--          Search-->
+<!--        </button>-->
+<!--      </div>-->
+<!--    </div>-->
+
+    <a href="#how-it-works"
+       class="bg-tropical-blue text-white px-8 py-3 mt-6 rounded-full hover:bg-[#5A9BFD] transition shadow-md">
+      Start Exploring
+    </a>
+  </div>
+
+  <!-- Carousel Navigation Controls -->
+  <div class="absolute bottom-24 left-0 right-0 flex justify-center items-center space-x-4 z-30">
+    <button
+      (click)="prevVideo()"
+      class="bg-white/30 hover:bg-white/50 text-white rounded-full p-2 transition-all duration-300 focus:outline-none"
+      aria-label="Previous video"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+      </svg>
+    </button>
+
+    <!-- Carousel Indicators -->
+    <div class="flex space-x-2">
+      <ng-container *ngFor="let video of backgroundVideos; let i = index">
         <button
-          class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-primary hover:bg-primary-light text-white p-3 rounded-full transition duration-300 shadow-md">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-          </svg>
-        </button>
-      </div>
+          (click)="goToVideo(i)"
+          class="w-3 h-3 rounded-full transition-all duration-300 focus:outline-none"
+          [ngClass]="{'bg-white': currentVideoIndex === i, 'bg-white/50 hover:bg-white/70': currentVideoIndex !== i}"
+          [attr.aria-label]="'Go to video ' + (i + 1)"
+        ></button>
+      </ng-container>
     </div>
+
+    <button
+      (click)="nextVideo()"
+      class="bg-white/30 hover:bg-white/50 text-white rounded-full p-2 transition-all duration-300 focus:outline-none"
+      aria-label="Next video"
+    >
+      <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
+  </div>
+
+  <div class="absolute bottom-8 left-0 right-0 text-center text-white">
+    <a href="#how-it-works" class="inline-block text-white hover:text-tropical-blue transition">
+      See how it works ↓
+    </a>
   </div>
 </section>

@@ -1,11 +1,12 @@
-import {Component, HostListener, OnDestroy, OnInit} from '@angular/core';
-import {CommonModule} from '@angular/common';
+import {Component, ElementRef, HostListener, Inject, OnDestroy, OnInit, PLATFORM_ID, Renderer2} from '@angular/core';
+import {CommonModule, DOCUMENT, isPlatformBrowser} from '@angular/common';
 import {RouterModule} from '@angular/router';
 import {Subscription} from 'rxjs';
 import {NavigationItem, NavigationService} from '../../core/services/navigation.service';
 import {MenuState, MenuStateService} from '../../core/services/menu-state.service';
 import {AuthService, AuthState} from '../../core/services/auth.service';
-import {fadeAnimation, mobileMenuAnimation, enterLeaveAnimation} from '../../core/animations/animation.constants';
+import {enterLeaveAnimation, fadeAnimation, mobileMenuAnimation} from '../../core/animations/animation.constants';
+import {animate, state, style, transition, trigger} from '@angular/animations';
 
 @Component({
   selector: 'app-navbar',
@@ -15,7 +16,21 @@ import {fadeAnimation, mobileMenuAnimation, enterLeaveAnimation} from '../../cor
   animations: [
     fadeAnimation,
     mobileMenuAnimation,
-    enterLeaveAnimation
+    enterLeaveAnimation,
+    // Add a new animation for navbar visibility
+    trigger('navbarVisibility', [
+      state('visible', style({
+        transform: 'translateY(0)',
+        opacity: 1
+      })),
+      state('hidden', style({
+        transform: 'translateY(-100%)',
+        opacity: 0
+      })),
+      transition('visible <=> hidden', [
+        animate('300ms ease-in-out')
+      ])
+    ])
   ]
 })
 export class NavbarComponent implements OnInit, OnDestroy {
@@ -26,10 +41,17 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   private subscriptions: Subscription = new Subscription();
 
+  private scrollThrottleTimeout: any;
+  private readonly throttleTime = 100; // ms
+
   constructor(
+    @Inject(DOCUMENT) private document: Document,
+    @Inject(PLATFORM_ID) private platformId: Object,
     private _navigationService: NavigationService,
     private _menuStateService: MenuStateService,
-    private _authService: AuthService
+    private _authService: AuthService,
+    private elementRef: ElementRef,
+    private renderer: Renderer2
   ) {
     this.menuState = this._menuStateService['initialState'];
   }
@@ -49,6 +71,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this.authState = state;
       })
     );
+
+    // Initialize background detection on page load
+    // Use setTimeout to ensure the DOM is fully rendered
+    setTimeout(() => {
+      this.detectBackgroundBrightness();
+    }, 100);
   }
 
   ngOnDestroy(): void {
@@ -67,6 +95,80 @@ export class NavbarComponent implements OnInit, OnDestroy {
         this._menuStateService.closeAllDropdowns();
       }
     }
+  }
+
+  @HostListener('window:scroll', [])
+  onWindowScroll(): void {
+    // Throttle scroll events
+    if (!this.scrollThrottleTimeout) {
+      this.scrollThrottleTimeout = setTimeout(() => {
+        this.handleScroll();
+        this.scrollThrottleTimeout = null;
+      }, this.throttleTime);
+    }
+  }
+
+  private handleScroll(): void {
+    const scrollPosition = window.scrollY;
+
+    // Update navbar visibility based on scroll position
+    this._menuStateService.updateNavbarVisibility(scrollPosition);
+
+    // Check if navbar is over a dark background
+    this.detectBackgroundBrightness();
+  }
+
+  // private detectBackgroundBrightness(): void {
+  //   // Get the element directly below the navbar
+  //   const navbarHeight = this.elementRef.nativeElement.offsetHeight;
+  //   const elementBelowNavbar = document.elementFromPoint(
+  //     window.innerWidth / 2,
+  //     navbarHeight + 5 // 5px below the navbar
+  //   );
+  //
+  //   if (elementBelowNavbar) {
+  //     // Get the background color of the element
+  //     const bgColor = window.getComputedStyle(elementBelowNavbar).backgroundColor;
+  //     const isOnDarkBackground = this.isDarkColor(bgColor);
+  //
+  //     // Update navbar styling based on background brightness
+  //     this._menuStateService.updateNavbarBackground(isOnDarkBackground);
+  //   }
+  // }
+  private detectBackgroundBrightness(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const navbarHeight = this.elementRef.nativeElement.offsetHeight;
+      const elementBelowNavbar = this.document.elementFromPoint(
+        window.innerWidth / 2,
+        navbarHeight + 5 // 5px below the navbar
+      );
+
+      if (elementBelowNavbar) {
+        const bgColor = window.getComputedStyle(elementBelowNavbar).backgroundColor;
+        const isOnDarkBackground = this.isDarkColor(bgColor);
+        this._menuStateService.updateNavbarBackground(isOnDarkBackground);
+      }
+    }
+  }
+
+  private isDarkColor(color: string): boolean {
+    // Parse RGB values from the color string
+    const rgbMatch = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/);
+
+    if (rgbMatch) {
+      const r = parseInt(rgbMatch[1], 10);
+      const g = parseInt(rgbMatch[2], 10);
+      const b = parseInt(rgbMatch[3], 10);
+
+      // Calculate perceived brightness using the formula:
+      // (0.299*R + 0.587*G + 0.114*B)
+      const brightness = (0.299 * r + 0.587 * g + 0.114 * b);
+
+      // If brightness is less than 128, consider it a dark background
+      return brightness < 128;
+    }
+
+    return false;
   }
 
   public toggleMobileMenu(): void {

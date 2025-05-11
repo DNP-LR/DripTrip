@@ -47,25 +47,14 @@ body {
 }
 
 body.text-lg {
-  font-size: 1.125rem; /* 18px */
-  line-height: 1.75rem; /* 28px */
+  font-size: 1.125rem;
+  line-height: 1.75rem;
 }
 
 
-.dropdown-enter-active, .dropdown-leave-active {
-  transition: opacity 0.3s, transform 0.3s;
-}
-
-.dropdown-enter-from, .dropdown-leave-to {
-  opacity: 0;
-  transform: translateY(-10px);
-}
-
-/* Mobile menu animations */
-.mobile-menu-enter-active, .mobile-menu-leave-active {
-  transition: transform 0.3s ease-in-out;
-}
-
-.mobile-menu-enter-from, .mobile-menu-leave-to {
-  transform: translateX(100%);
+nav {
+  transition: transform 0.3s ease-in-out,
+  background-color 0.3s ease-in-out,
+  color 0.3s ease-in-out,
+  box-shadow 0.3s ease-in-out;
 }

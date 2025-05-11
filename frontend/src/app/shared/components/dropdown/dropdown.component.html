@@ -1,0 +1,39 @@
+<div class="relative w-full font-inherit">
+  <label *ngIf="label" class="block mb-2 text-sm font-medium text-gray-700">{{ label }}</label>
+
+  <div
+    class="flex items-center justify-between w-full p-2 bg-white border border-gray-300 rounded-md cursor-pointer transition-colors hover:border-gray-400 focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/25"
+    (click)="toggle()"
+  >
+    <span class="flex-1 text-left overflow-hidden text-ellipsis whitespace-nowrap">{{ getDisplayLabel() }}</span>
+    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
+         stroke="currentColor" width="16" height="16" class="ml-2 transition-transform duration-200"
+         [ngClass]="{'transform rotate-180': isOpen}">
+      <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/>
+    </svg>
+  </div>
+
+  <div
+    class="absolute z-10 w-full mt-1 bg-white border border-gray-300 rounded-md shadow-lg overflow-hidden"
+    *ngIf="isOpen"
+    [@fadeAnimation]="getAnimationState()"
+  >
+    <ul class="max-h-60 overflow-y-auto p-0 m-0 list-none">
+      <li
+        *ngFor="let option of options"
+        class="p-2 cursor-pointer transition-colors hover:bg-gray-100"
+        [class.bg-gray-200]="selectedValue === (optionValue ? option[optionValue] : option)"
+        [class.font-medium]="selectedValue === (optionValue ? option[optionValue] : option)"
+        (click)="select(option)"
+      >
+        <ng-container *ngIf="customTemplate; else defaultTemplate">
+          <ng-container *ngTemplateOutlet="customTemplate; context: { $implicit: option }"></ng-container>
+        </ng-container>
+
+        <ng-template #defaultTemplate>
+          {{ optionLabel ? option[optionLabel] : option }}
+        </ng-template>
+      </li>
+    </ul>
+  </div>
+</div>
