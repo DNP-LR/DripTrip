@@ -1,0 +1,58 @@
+<section class="relative h-screen">
+  <div class="absolute inset-0 overflow-hidden">
+    <video
+      class="absolute w-full h-full object-cover"
+      autoplay
+      muted
+      loop
+      playsinline
+    >
+      <source src="/src/videos/cameroon-background.mp4" type="video/mp4">
+      <!-- Fallback image if video doesn't load -->
+      <img src="https://source.unsplash.com/random/1920x1080/?cameroon,landscape" alt="Cameroon Landscape"
+           class="w-full h-full object-cover">
+    </video>
+    <!-- Overlay Gradient: Earth Clay to black for legibility -->
+    <div class="absolute inset-0 bg-gradient-to-b from-primary/70 to-base-dark/90"></div>
+  </div>
+
+  <!-- Content -->
+  <div class="relative container mx-auto px-4 h-full flex flex-col justify-center items-center text-center text-white">
+    <!-- Headline -->
+    <h1 class="text-4xl md:text-5xl lg:text-6xl font-bold mb-4">Discover Cameroon Like Never Before</h1>
+
+    <!-- Subheading -->
+    <p class="text-xl md:text-2xl mb-8 max-w-3xl">Experience the rich cultural heritage, breathtaking landscapes, and
+      vibrant traditions of Africa's hidden gem.</p>
+
+    <!-- CTA Buttons -->
+    <div class="flex flex-col sm:flex-row gap-4 mb-12">
+      <a href="#"
+         class="bg-primary/80 hover:bg-primary text-white px-6 py-3 rounded-full text-lg font-semibold transition duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+        Start Exploring
+      </a>
+      <a href="#"
+         class="bg-white/30 hover:bg-white/40 border-2 border-white/60 text-white px-6 py-3 rounded-full text-lg font-semibold transition duration-300 backdrop-blur-sm shadow-lg hover:shadow-xl transform hover:-translate-y-1">
+        Learn More
+      </a>
+    </div>
+
+    <!-- Search Input Field -->
+    <div class="w-full max-w-2xl">
+      <div class="relative">
+        <input
+          type="text"
+          placeholder="Where do you want to go?"
+          class="w-full px-6 py-4 rounded-full text-base bg-white/30 backdrop-blur-md border border-white/50 text-white placeholder-white/70 focus:outline-none focus:ring-2 focus:ring-primary shadow-lg"
+        >
+        <button
+          class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-primary hover:bg-primary-light text-white p-3 rounded-full transition duration-300 shadow-md">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+</section>

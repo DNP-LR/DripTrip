@@ -1,1 +1,71 @@
 @import "tailwindcss";
+/*@import url('https://fonts.googleapis.com/css2?family=Urbanist:wght@300;400;500;700&family=Poppins:wght@300;400;500;700&display=swap');*/
+
+@theme {
+  --color-primary: #764D25;
+  --color-primary-light: #A66C3D;
+  --color-primary-dark: #4D3219;
+
+  --color-accent: #2874FC;
+  --color-accent-light: #5A9BFD;
+  --color-accent-dark: #1A4EB3;
+
+  --color-base: #1D1D1B;
+  --color-base-light: #2E2E2B;
+  --color-base-dark: #121211;
+
+  --color-white: #FFFFFF;
+
+  --font-primary: 'Urbanist', 'Poppins', sans-serif;
+
+}
+
+body {
+  font-family: var(--font-primary);
+  font-weight: 400;
+  transition: font-size 0.3s ease;
+}
+
+.font-urbanist {
+  font-family: 'Urbanist', 'Poppins', sans-serif;
+}
+
+.font-light {
+  font-weight: 300;
+}
+
+.font-regular {
+  font-weight: 400;
+}
+
+.font-medium {
+  font-weight: 500;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+body.text-lg {
+  font-size: 1.125rem; /* 18px */
+  line-height: 1.75rem; /* 28px */
+}
+
+
+.dropdown-enter-active, .dropdown-leave-active {
+  transition: opacity 0.3s, transform 0.3s;
+}
+
+.dropdown-enter-from, .dropdown-leave-to {
+  opacity: 0;
+  transform: translateY(-10px);
+}
+
+/* Mobile menu animations */
+.mobile-menu-enter-active, .mobile-menu-leave-active {
+  transition: transform 0.3s ease-in-out;
+}
+
+.mobile-menu-enter-from, .mobile-menu-leave-to {
+  transform: translateX(100%);
+}
