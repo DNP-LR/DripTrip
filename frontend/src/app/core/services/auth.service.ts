@@ -10,53 +10,40 @@ export interface AuthState {
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class AuthService {
-  private _authState = new BehaviorSubject<AuthState>({
-    isAuthenticated: false
+  private readonly _authState: BehaviorSubject<AuthState> = new BehaviorSubject<AuthState>({
+    isAuthenticated: false,
   });
 
-  /**
-   * Observable that emits the current authentication state
-   */
+
   public readonly authState$: Observable<AuthState> = this._authState.asObservable();
 
-  /**
-   * Get the current authentication state
-   */
+
   get authState(): AuthState {
     return this._authState.value;
   }
 
-  /**
-   * Get whether the user is authenticated
-   */
+
   get isAuthenticated(): boolean {
     return this._authState.value.isAuthenticated;
   }
 
-  /**
-   * Login the user
-   */
-  login(email: string, password: string): void {
-    // In a real application, this would make an API call
-    // For now, we'll just simulate a successful login
+
+  public login(email: string, password: string): void {
     this._authState.next({
       isAuthenticated: true,
       user: {
         name: 'User',
-        email: email
-      }
+        email: email,
+      },
     });
   }
 
-  /**
-   * Logout the user
-   */
-  logout(): void {
+  public logout(): void {
     this._authState.next({
-      isAuthenticated: false
+      isAuthenticated: false,
     });
   }
 }

@@ -4,106 +4,120 @@
        'bg-primary text-white': menuState.isOnDarkBackground,
        'shadow-md': menuState.isNavbarVisible
      }"
-     class="sticky top-0 z-50 text-base py-4 font-urbanist transition-all duration-300">
+     class="sticky top-0 z-50 text-base py-6 font-urbanist transition-all duration-300">
   <div class="container mx-auto px-4 flex justify-between items-center">
-    <div class="text-2xl font-bold">
-      <a [routerLink]="'/'"
-         [ngClass]="{'text-primary': !menuState.isOnDarkBackground, 'text-white': menuState.isOnDarkBackground}"
+    <div class="text-3xl font-bold">
+      <a [ngClass]="{'text-primary': !menuState.isOnDarkBackground, 'text-white': menuState.isOnDarkBackground}"
+         [routerLink]="'/'"
          class="hover:text-accent transition duration-300">DripTrip</a>
     </div>
 
-    <div class="hidden text-base md:flex space-x-8 font-medium">
-      <ng-container *ngFor="let item of navigationItems">
-        <div *ngIf="!item.children" class="relative">
-          <a [routerLink]="item.path"
-             [attr.href]="item.isExternal ? item.path : null"
-             [attr.target]="item.isExternal ? '_blank' : null"
-             class="text-base hover:text-accent transition duration-700">
-            {{ item.label }}
-          </a>
-        </div>
+    <div class="hidden text-base text-lg md:flex space-x-8 font-medium">
+      @for (item of navigationItems; track $index) {
+        <ng-container>
+          @if (!item.children) {
+            <div class="relative">
+              <a [routerLink]="item.path"
+                 [attr.href]="item.isExternal ? item.path : null"
+                 [attr.target]="item.isExternal ? '_blank' : null"
+                 [ngClass]="{
+                  'text-base': !menuState.isOnDarkBackground,
+                  'text-white': menuState.isOnDarkBackground,
+                 }"
+                 class="hover:text-accent transition duration-700">
+                {{ item.label }}
+              </a>
+            </div>
+          }
+          @if (item.children) {
+            <div class="relative group">
+              <a (click)="toggleDropdown(item.label, $event)"
+                 data-dropdown-toggle="true"
+                 [ngClass]="{
+                  'text-base': !menuState.isOnDarkBackground,
+                  'text-white': menuState.isOnDarkBackground,
+                 }"
+                 class="gap-2 hover:text-accent transition duration-300 cursor-pointer flex items-center">
+                {{ item.label }}
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="3"
+                     stroke="#2874FC" width="16" height="16">
+                  <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
+                </svg>
+              </a>
 
-
-        <div *ngIf="item.children" class="relative group">
-          <a (click)="toggleDropdown(item.label, $event)"
-             data-dropdown-toggle="true"
-             class="text-base gap-2 hover:text-accent transition duration-300 cursor-pointer flex items-center">
-            {{ item.label }}
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1"
-                 stroke="currentColor" width="16" height="16">
-              <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5"/>
-            </svg>
-          </a>
-
-          <div *ngIf="isDropdownActive(item.label)"
-               [@enterLeaveAnimation]
-               class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-50">
-            <a *ngFor="let child of item.children"
-               [routerLink]="child.path"
-               class="block px-4 py-2 text-base hover:text-accent hover:bg-gray-100 transition duration-300">
-              {{ child.label }}
-            </a>
-          </div>
-        </div>
-      </ng-container>
+              @if (isDropdownActive(item.label)) {
+                <div
+                  [@enterLeaveAnimation]
+                  class="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg py-2 z-50">
+                  @for (child of item.children; track $index) {
+                    <a [routerLink]="child.path"
+                       class="block px-4 py-2 text-base hover:text-accent hover:bg-gray-100 transition duration-300">
+                      {{ child.label }}
+                    </a>
+                  }
+                </div>
+              }
+            </div>
+          }
+        </ng-container>
+      }
     </div>
 
-    <!-- Right Section -->
     <div class="hidden md:flex items-center space-x-4">
-      <!-- Language Toggle -->
       <button (click)="toggleLanguage()"
               class="text-primary hover:text-accent transition duration-300 flex items-center">
         <span>{{ menuState.language === 'en' ? '🇬🇧 EN' : '🇫🇷 FR' }}</span>
       </button>
 
-      <!-- Notification Bell -->
       <div class="relative">
         <button (click)="toggleNotifications()"
-                data-dropdown-toggle="true"
-                class="text-primary hover:text-accent transition duration-300 relative">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                  d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/>
+                class="text-primary hover:text-accent transition duration-300 relative"
+                data-dropdown-toggle="true">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+            <path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9" stroke-linecap="round" stroke-linejoin="round"
+                  stroke-width="2" />
           </svg>
           <span
             class="absolute -top-1 -right-1 bg-red-500 text-white text-xs rounded-full h-4 w-4 flex items-center justify-center">3</span>
         </button>
 
-        <div *ngIf="menuState.notificationsOpen"
-             [@enterLeaveAnimation]
-             class="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg py-2 z-50">
-          <div class="px-4 py-2 border-b border-gray-200">
-            <h3 class="font-semibold text-primary">Notifications</h3>
+        @if (menuState.notificationsOpen) {
+          <div
+            [@enterLeaveAnimation]
+            class="absolute right-0 mt-2 w-64 bg-white rounded-md shadow-lg py-2 z-50">
+            <div class="px-4 py-2 border-b border-gray-200">
+              <h3 class="font-semibold text-primary">Notifications</h3>
+            </div>
+            <div class="px-4 py-2 text-sm text-base border-b border-gray-200">
+              <p class="font-semibold">New Badge Earned!</p>
+              <p class="text-gray-600">You've earned the "Explorer" badge.</p>
+            </div>
+            <div class="px-4 py-2 text-sm text-base border-b border-gray-200">
+              <p class="font-semibold">Trip Reminder</p>
+              <p class="text-gray-600">Your trip to Paris is in 3 days.</p>
+            </div>
+            <div class="px-4 py-2 text-sm text-base">
+              <p class="font-semibold">New Feature</p>
+              <p class="text-gray-600">Check out our new budgeting tools!</p>
+            </div>
           </div>
-          <div class="px-4 py-2 text-sm text-base border-b border-gray-200">
-            <p class="font-semibold">New Badge Earned!</p>
-            <p class="text-gray-600">You've earned the "Explorer" badge.</p>
-          </div>
-          <div class="px-4 py-2 text-sm text-base border-b border-gray-200">
-            <p class="font-semibold">Trip Reminder</p>
-            <p class="text-gray-600">Your trip to Paris is in 3 days.</p>
-          </div>
-          <div class="px-4 py-2 text-sm text-base">
-            <p class="font-semibold">New Feature</p>
-            <p class="text-gray-600">Check out our new budgeting tools!</p>
-          </div>
-        </div>
+        }
       </div>
 
-      <!-- User Profile Menu -->
+
       <div class="relative">
         <button (click)="toggleUserProfile()"
-                data-dropdown-toggle="true"
-                class="text-primary hover:text-accent transition duration-300">
+                class="text-primary hover:text-accent transition duration-300"
+                data-dropdown-toggle="true">
           <div *ngIf="authState.isAuthenticated; else userIcon"
                class="h-8 w-8 rounded-full bg-accent text-white flex items-center justify-center">
-            {{ authState.user?.name?.charAt(0) || 'U' }}
+            {{ authState.user?.name || 'U' }}
           </div>
           <ng-template #userIcon>
-            <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                 stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                    d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                 xmlns="http://www.w3.org/2000/svg">
+              <path d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" stroke-linecap="round" stroke-linejoin="round"
+                    stroke-width="2" />
             </svg>
           </ng-template>
         </button>
@@ -145,87 +159,91 @@
       </div>
     </div>
 
-    <!-- Mobile Menu Button -->
     <div class="md:hidden flex items-center space-x-4">
-      <!-- Hamburger Menu Button -->
       <button (click)="toggleMobileMenu()"
               class="text-primary hover:text-accent focus:outline-none">
-        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+        <svg class="h-6 w-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path d="M4 6h16M4 12h16M4 18h16" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" />
         </svg>
       </button>
     </div>
 
-    <div *ngIf="isMobileMenuOpen"
-         [@enterLeaveAnimation]
-         class="absolute top-full left-0 right-0 bg-white text-base py-4 px-4 md:hidden shadow-lg z-50">
-      <div class="flex flex-col space-y-2">
-        <ng-container *ngFor="let item of navigationItems">
-          <a *ngIf="!item.children"
-             [routerLink]="item.path"
-             class="py-2 text-base hover:text-accent transition duration-300 font-medium">
-            {{ item.label }}
-          </a>
+    @if (isMobileMenuOpen) {
+      <div [@enterLeaveAnimation]
+           class="absolute top-full left-0 right-0 bg-white text-base py-4 px-4 md:hidden shadow-lg z-50">
+        <div class="flex flex-col space-y-2">
+          @for (item of navigationItems; track $index) {
+            <ng-container>
+              <a *ngIf="!item.children"
+                 [routerLink]="item.path"
+                 class="py-2 text-base hover:text-accent transition duration-300 font-medium">
+                {{ item.label }}
+              </a>
 
-          <!-- Menu item with dropdown -->
-          <div *ngIf="item.children" class="py-2">
-            <button (click)="toggleDropdown(item.label)"
-                    data-dropdown-toggle="true"
-                    class="w-full text-left flex justify-between items-center text-primary hover:text-accent transition duration-300 font-medium">
-              {{ item.label }}
-              <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
-                   stroke="currentColor">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-              </svg>
+              @if (item.children) {
+                <div class="py-2">
+                  <button (click)="toggleDropdown(item.label)"
+                          data-dropdown-toggle="true"
+                          class="w-full text-left flex justify-between items-center text-primary hover:text-accent transition duration-300 font-medium">
+                    {{ item.label }}
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24"
+                         stroke="currentColor">
+                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </button>
+
+                  @if (isDropdownActive(item.label)) {
+                    <div [@enterLeaveAnimation]
+                         class="pl-4 mt-2 space-y-2">
+                      @for (child of item.children; track $index) {
+                        <a [routerLink]="child.path"
+                           class="block py-1 text-base hover:text-accent transition duration-300">
+                          {{ child.label }}
+                        </a>
+                      }
+                    </div>
+                  }
+                </div>
+              }
+            </ng-container>
+          }
+
+          <div class="pt-4 border-t border-gray-200 space-y-4">
+            <button (click)="toggleLanguage()"
+                    class="w-full text-left py-2 text-primary hover:text-accent transition duration-300 flex items-center">
+              <span class="mr-2">{{ menuState.language === 'en' ? '🇬🇧' : '🇫🇷' }}</span>
+              <span>{{ menuState.language === 'en' ? 'English' : 'Français' }}</span>
             </button>
 
-            <div *ngIf="isDropdownActive(item.label)"
-                 [@enterLeaveAnimation]
-                 class="pl-4 mt-2 space-y-2">
-              <a *ngFor="let child of item.children"
-                 [routerLink]="child.path"
-                 class="block py-1 text-base hover:text-accent transition duration-300">
-                {{ child.label }}
-              </a>
+            <div class="space-y-2">
+              @if (!authState.isAuthenticated) {
+                <ng-container [@enterLeaveAnimation]>
+                  <button (click)="login()"
+                          class="w-full text-left py-2 text-primary hover:text-accent transition duration-300">
+                    Login
+                  </button>
+                  <a [routerLink]="'/auth/signup'"
+                     class="block w-full text-center py-2 bg-accent hover:bg-accent/80 text-white rounded-full transition duration-300">
+                    Start Exploring
+                  </a>
+                </ng-container>
+              } @else {
+                <ng-template>
+                  <div [@enterLeaveAnimation]>
+                    <div class="py-2 text-primary">
+                      Welcome, {{ authState.user?.name }}
+                    </div>
+                    <button (click)="logout()"
+                            class="w-full text-left py-2 text-primary hover:text-accent transition duration-300">
+                      Logout
+                    </button>
+                  </div>
+                </ng-template>
+              }
             </div>
-          </div>
-        </ng-container>
-
-
-        <div class="pt-4 border-t border-gray-200 space-y-4">
-          <!-- Language Toggle -->
-          <button (click)="toggleLanguage()"
-                  class="w-full text-left py-2 text-primary hover:text-accent transition duration-300 flex items-center">
-            <span class="mr-2">{{ menuState.language === 'en' ? '🇬🇧' : '🇫🇷' }}</span>
-            <span>{{ menuState.language === 'en' ? 'English' : 'Français' }}</span>
-          </button>
-
-          <!-- Auth Buttons -->
-          <div class="space-y-2">
-            <ng-container *ngIf="!authState.isAuthenticated; else mobileLoggedIn" [@enterLeaveAnimation]>
-              <button (click)="login()"
-                      class="w-full text-left py-2 text-primary hover:text-accent transition duration-300">
-                Login
-              </button>
-              <a [routerLink]="'/auth/signup'"
-                 class="block w-full text-center py-2 bg-accent hover:bg-accent/80 text-white rounded-full transition duration-300">
-                Start Exploring
-              </a>
-            </ng-container>
-            <ng-template #mobileLoggedIn>
-              <div [@enterLeaveAnimation]>
-                <div class="py-2 text-primary">
-                  Welcome, {{ authState.user?.name }}
-                </div>
-                <button (click)="logout()"
-                        class="w-full text-left py-2 text-primary hover:text-accent transition duration-300">
-                  Logout
-                </button>
-              </div>
-            </ng-template>
           </div>
         </div>
       </div>
-    </div>
+    }
   </div>
 </nav>

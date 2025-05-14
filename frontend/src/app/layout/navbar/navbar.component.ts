@@ -1,12 +1,21 @@
-import {Component, ElementRef, HostListener, Inject, OnDestroy, OnInit, PLATFORM_ID, Renderer2} from '@angular/core';
-import {CommonModule, DOCUMENT, isPlatformBrowser} from '@angular/common';
-import {RouterModule} from '@angular/router';
-import {Subscription} from 'rxjs';
-import {NavigationItem, NavigationService} from '../../core/services/navigation.service';
-import {MenuState, MenuStateService} from '../../core/services/menu-state.service';
-import {AuthService, AuthState} from '../../core/services/auth.service';
-import {enterLeaveAnimation, fadeAnimation, mobileMenuAnimation} from '../../core/animations/animation.constants';
-import {animate, state, style, transition, trigger} from '@angular/animations';
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  HostListener,
+  Inject,
+  OnDestroy,
+  OnInit,
+  PLATFORM_ID,
+} from '@angular/core';
+import { CommonModule, DOCUMENT, isPlatformBrowser } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { Subscription } from 'rxjs';
+import { NavigationItem, NavigationService } from '../../core/services/navigation.service';
+import { MenuState, MenuStateService } from '../../core/services/menu-state.service';
+import { AuthService, AuthState } from '../../core/services/auth.service';
+import { enterLeaveAnimation, fadeAnimation, mobileMenuAnimation } from '../../core/animations';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-navbar',
@@ -17,41 +26,39 @@ import {animate, state, style, transition, trigger} from '@angular/animations';
     fadeAnimation,
     mobileMenuAnimation,
     enterLeaveAnimation,
-    // Add a new animation for navbar visibility
     trigger('navbarVisibility', [
       state('visible', style({
         transform: 'translateY(0)',
-        opacity: 1
+        opacity: 1,
       })),
       state('hidden', style({
         transform: 'translateY(-100%)',
-        opacity: 0
+        opacity: 0,
       })),
       transition('visible <=> hidden', [
-        animate('300ms ease-in-out')
-      ])
-    ])
-  ]
+        animate('500ms cubic-bezier(0.4, 0.0, 0.2, 1)'),
+      ]),
+    ]),
+  ],
 })
-export class NavbarComponent implements OnInit, OnDestroy {
+export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
   public navigationItems: NavigationItem[] = [];
   public isMobileMenuOpen: boolean = false;
-  public authState: AuthState = {isAuthenticated: false};
+  public authState: AuthState = { isAuthenticated: false };
   public menuState: MenuState;
 
-  private subscriptions: Subscription = new Subscription();
+  private readonly subscriptions: Subscription = new Subscription();
 
   private scrollThrottleTimeout: any;
-  private readonly throttleTime = 100; // ms
+  private readonly throttleTime = 100;
 
   constructor(
-    @Inject(DOCUMENT) private document: Document,
-    @Inject(PLATFORM_ID) private platformId: Object,
-    private _navigationService: NavigationService,
-    private _menuStateService: MenuStateService,
-    private _authService: AuthService,
-    private elementRef: ElementRef,
-    private renderer: Renderer2
+    @Inject(DOCUMENT) private readonly document: Document,
+    @Inject(PLATFORM_ID) private readonly platformId: Object,
+    private readonly _navigationService: NavigationService,
+    private readonly _menuStateService: MenuStateService,
+    private readonly _authService: AuthService,
+    private readonly elementRef: ElementRef,
   ) {
     this.menuState = this._menuStateService['initialState'];
   }
@@ -63,18 +70,16 @@ export class NavbarComponent implements OnInit, OnDestroy {
       this._menuStateService.menuState$.subscribe(state => {
         this.menuState = state;
         this.isMobileMenuOpen = state.mobileMenuOpen;
-      })
+      }),
     );
 
     this.subscriptions.add(
       this._authService.authState$.subscribe(state => {
         this.authState = state;
-      })
+      }),
     );
 
-    // Initialize background detection on page load
-    // Use setTimeout to ensure the DOM is fully rendered
-    setTimeout(() => {
+    setTimeout((): void => {
       this.detectBackgroundBrightness();
     }, 100);
   }
@@ -83,14 +88,28 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.subscriptions.unsubscribe();
   }
 
+  ngAfterViewInit(): void {
+    this.detectBackgroundBrightness();
+    if (isPlatformBrowser(this.platformId)) {
+      const observer = new MutationObserver((): void => {
+        this.detectBackgroundBrightness();
+      });
+      observer.observe(this.document.body, {
+        childList: true,
+        attributes: true,
+        subtree: true,
+      });
+      this.subscriptions.add({
+        unsubscribe: (): void => observer.disconnect(),
+      });
+    }
+  }
+
   @HostListener('document:click', ['$event'])
   onDocumentClick(event: MouseEvent): void {
-    // Close all dropdowns when clicking outside
     if (this.menuState.activeDropdown) {
-      // Check if the click was inside a dropdown toggle button
       const clickedElement = event.target as HTMLElement;
-      const isDropdownToggle = clickedElement.closest('[data-dropdown-toggle]');
-
+      const isDropdownToggle: Element | null = clickedElement.closest('[data-dropdown-toggle]');
       if (!isDropdownToggle) {
         this._menuStateService.closeAllDropdowns();
       }
@@ -99,76 +118,12 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   @HostListener('window:scroll', [])
   onWindowScroll(): void {
-    // Throttle scroll events
     if (!this.scrollThrottleTimeout) {
-      this.scrollThrottleTimeout = setTimeout(() => {
+      this.scrollThrottleTimeout = setTimeout((): void => {
         this.handleScroll();
         this.scrollThrottleTimeout = null;
       }, this.throttleTime);
     }
-  }
-
-  private handleScroll(): void {
-    const scrollPosition = window.scrollY;
-
-    // Update navbar visibility based on scroll position
-    this._menuStateService.updateNavbarVisibility(scrollPosition);
-
-    // Check if navbar is over a dark background
-    this.detectBackgroundBrightness();
-  }
-
-  // private detectBackgroundBrightness(): void {
-  //   // Get the element directly below the navbar
-  //   const navbarHeight = this.elementRef.nativeElement.offsetHeight;
-  //   const elementBelowNavbar = document.elementFromPoint(
-  //     window.innerWidth / 2,
-  //     navbarHeight + 5 // 5px below the navbar
-  //   );
-  //
-  //   if (elementBelowNavbar) {
-  //     // Get the background color of the element
-  //     const bgColor = window.getComputedStyle(elementBelowNavbar).backgroundColor;
-  //     const isOnDarkBackground = this.isDarkColor(bgColor);
-  //
-  //     // Update navbar styling based on background brightness
-  //     this._menuStateService.updateNavbarBackground(isOnDarkBackground);
-  //   }
-  // }
-  private detectBackgroundBrightness(): void {
-    if (isPlatformBrowser(this.platformId)) {
-      const navbarHeight = this.elementRef.nativeElement.offsetHeight;
-      const elementBelowNavbar = this.document.elementFromPoint(
-        window.innerWidth / 2,
-        navbarHeight + 5 // 5px below the navbar
-      );
-
-      if (elementBelowNavbar) {
-        const bgColor = window.getComputedStyle(elementBelowNavbar).backgroundColor;
-        const isOnDarkBackground = this.isDarkColor(bgColor);
-        this._menuStateService.updateNavbarBackground(isOnDarkBackground);
-      }
-    }
-  }
-
-  private isDarkColor(color: string): boolean {
-    // Parse RGB values from the color string
-    const rgbMatch = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/);
-
-    if (rgbMatch) {
-      const r = parseInt(rgbMatch[1], 10);
-      const g = parseInt(rgbMatch[2], 10);
-      const b = parseInt(rgbMatch[3], 10);
-
-      // Calculate perceived brightness using the formula:
-      // (0.299*R + 0.587*G + 0.114*B)
-      const brightness = (0.299 * r + 0.587 * g + 0.114 * b);
-
-      // If brightness is less than 128, consider it a dark background
-      return brightness < 128;
-    }
-
-    return false;
   }
 
   public toggleMobileMenu(): void {
@@ -180,8 +135,6 @@ export class NavbarComponent implements OnInit, OnDestroy {
       event.preventDefault();
       event.stopPropagation();
     }
-
-    // Close other dropdowns when opening a new one
     if (this.menuState.activeDropdown !== dropdownId) {
       this._menuStateService.closeAllDropdowns();
     }
@@ -211,5 +164,73 @@ export class NavbarComponent implements OnInit, OnDestroy {
 
   public logout(): void {
     this._authService.logout();
+  }
+
+  private handleScroll(): void {
+    const scrollPosition = window.scrollY;
+    this._menuStateService.updateNavbarVisibility(scrollPosition);
+    this.detectBackgroundBrightness();
+  }
+
+  // private detectBackgroundBrightness(): void {
+  //   if (isPlatformBrowser(this.platformId)) {
+  //     const navbarHeight = this.elementRef.nativeElement.offsetHeight;
+  //     const elementBelowNavbar: Element | null = this.document.elementFromPoint(
+  //       window.innerWidth / 2,
+  //       navbarHeight + 5,
+  //     );
+  //
+  //     if (elementBelowNavbar) {
+  //       const bgColor: string = window.getComputedStyle(elementBelowNavbar).backgroundColor;
+  //       const isOnDarkBackground: boolean = this.isDarkColor(bgColor);
+  //       this._menuStateService.updateNavbarBackground(isOnDarkBackground);
+  //     }
+  //   }
+  // }
+  private detectBackgroundBrightness(): void {
+    if (isPlatformBrowser(this.platformId)) {
+      const navbarHeight = this.elementRef.nativeElement.offsetHeight;
+
+      const checkPoints = [
+        window.innerWidth / 4,
+        window.innerWidth / 2,
+        (window.innerWidth / 4) * 3,
+      ];
+
+      let darkBackgroundCount: number = 0;
+
+      for (const x of checkPoints) {
+        const elementBelowNavbar: Element | null = this.document.elementFromPoint(
+          x,
+          navbarHeight + 5,
+        );
+
+        if (elementBelowNavbar) {
+          const bgColor = window.getComputedStyle(elementBelowNavbar).backgroundColor;
+          if (this.isDarkColor(bgColor)) {
+            darkBackgroundCount++;
+          }
+        }
+      }
+
+      const isOnDarkBackground: boolean = darkBackgroundCount > checkPoints.length / 2;
+      this._menuStateService.updateNavbarBackground(isOnDarkBackground);
+    }
+  }
+
+  private isDarkColor(color: string): boolean {
+
+    const rgbMatch = RegExp(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/).exec(color);
+
+    if (rgbMatch) {
+      const r: number = parseInt(rgbMatch[1], 10);
+      const g: number = parseInt(rgbMatch[2], 10);
+      const b: number = parseInt(rgbMatch[3], 10);
+
+      const brightness = (0.299 * r + 0.587 * g + 0.114 * b);
+
+      return brightness < 128;
+    }
+    return false;
   }
 }

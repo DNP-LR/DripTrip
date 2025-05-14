@@ -4,7 +4,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import { NavbarComponent } from './navbar.component';
 import { NavigationService } from '../../core/services/navigation.service';
-import { MenuStateService, MenuState } from '../../core/services/menu-state.service';
+import { MenuState, MenuStateService } from '../../core/services/menu-state.service';
 import { AuthService, AuthState } from '../../core/services/auth.service';
 
 describe('NavbarComponent', () => {
@@ -21,14 +21,14 @@ describe('NavbarComponent', () => {
     language: 'en',
     accessibilityOptions: {
       largeFont: false,
-      highContrast: false
+      highContrast: false,
     },
     notificationsOpen: false,
-    userProfileOpen: false
+    userProfileOpen: false,
   };
 
   const mockAuthState: AuthState = {
-    isAuthenticated: false
+    isAuthenticated: false,
   };
 
   const mockNavigationItems = [
@@ -37,9 +37,9 @@ describe('NavbarComponent', () => {
       label: 'Discover',
       path: '/discover',
       children: [
-        { label: 'Attractions', path: '/discover/attractions' }
-      ]
-    }
+        { label: 'Attractions', path: '/discover/attractions' },
+      ],
+    },
   ];
 
   beforeEach(async () => {
@@ -51,7 +51,7 @@ describe('NavbarComponent', () => {
       'toggleLargeFont',
       'toggleHighContrast',
       'toggleNotifications',
-      'toggleUserProfile'
+      'toggleUserProfile',
     ]);
 
     const authServiceSpy = jasmine.createSpyObj('AuthService', ['login', 'logout']);
@@ -66,10 +66,10 @@ describe('NavbarComponent', () => {
       providers: [
         { provide: MenuStateService, useValue: menuStateServiceSpy },
         { provide: AuthService, useValue: authServiceSpy },
-        { provide: NavigationService, useValue: navigationServiceSpy }
-      ]
+        { provide: NavigationService, useValue: navigationServiceSpy },
+      ],
     })
-    .compileComponents();
+      .compileComponents();
 
     fixture = TestBed.createComponent(NavbarComponent);
     component = fixture.componentInstance;

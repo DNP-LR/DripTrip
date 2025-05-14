@@ -13,200 +13,163 @@ export interface MenuState {
   notificationsOpen: boolean;
   userProfileOpen: boolean;
 
-  // Enhanced navbar properties
+
   isNavbarVisible: boolean;
   lastScrollPosition: number;
   isOnDarkBackground: boolean;
 }
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class MenuStateService {
-  private initialState: MenuState = {
+  private readonly initialState: MenuState = {
     mobileMenuOpen: false,
     activeDropdown: null,
     darkMode: false,
     language: 'en',
     accessibilityOptions: {
       largeFont: false,
-      highContrast: false
+      highContrast: false,
     },
     notificationsOpen: false,
     userProfileOpen: false,
 
-    // Enhanced navbar default values
+
     isNavbarVisible: true,
     lastScrollPosition: 0,
-    isOnDarkBackground: false
+    isOnDarkBackground: false,
   };
-
-  private _menuState = new BehaviorSubject<MenuState>(this.initialState);
-
-  /**
-   * Observable that emits the current state of the menu
-   */
-  public readonly menuState$: Observable<MenuState> = this._menuState.asObservable();
-
   /**
    * Observable that emits the current state of the mobile menu
    */
   public readonly mobileMenuOpen$: Observable<boolean> = new BehaviorSubject<boolean>(this.initialState.mobileMenuOpen).asObservable();
+  private readonly _menuState = new BehaviorSubject<MenuState>(this.initialState);
 
-  /**
-   * Get the current state of the mobile menu
-   */
+  public readonly menuState$: Observable<MenuState> = this._menuState.asObservable();
+
+
   get isMobileMenuOpen(): boolean {
     return this._menuState.value.mobileMenuOpen;
   }
 
-  /**
-   * Toggle the mobile menu state
-   */
-  toggleMobileMenu(): void {
+
+  public toggleMobileMenu(): void {
     const currentState = this._menuState.value;
     this._menuState.next({
       ...currentState,
-      mobileMenuOpen: !currentState.mobileMenuOpen
+      mobileMenuOpen: !currentState.mobileMenuOpen,
     });
   }
 
-  /**
-   * Set the mobile menu state
-   */
-  setMobileMenuState(isOpen: boolean): void {
+
+  public setMobileMenuState(isOpen: boolean): void {
     const currentState = this._menuState.value;
     this._menuState.next({
       ...currentState,
-      mobileMenuOpen: isOpen
+      mobileMenuOpen: isOpen,
     });
   }
 
-  /**
-   * Toggle a dropdown menu
-   */
-  toggleDropdown(dropdownId: string): void {
+
+  public toggleDropdown(dropdownId: string): void {
     const currentState = this._menuState.value;
     this._menuState.next({
       ...currentState,
-      activeDropdown: currentState.activeDropdown === dropdownId ? null : dropdownId
+      activeDropdown: currentState.activeDropdown === dropdownId ? null : dropdownId,
     });
   }
 
-  /**
-   * Close all dropdowns
-   */
-  closeAllDropdowns(): void {
+
+  public closeAllDropdowns(): void {
     const currentState = this._menuState.value;
     this._menuState.next({
       ...currentState,
       activeDropdown: null,
       notificationsOpen: false,
-      userProfileOpen: false
+      userProfileOpen: false,
     });
   }
 
-  /**
-   * Toggle dark mode
-   */
-  toggleDarkMode(): void {
+
+  public toggleDarkMode(): void {
     const currentState = this._menuState.value;
     this._menuState.next({
       ...currentState,
-      darkMode: !currentState.darkMode
+      darkMode: !currentState.darkMode,
     });
   }
 
-  /**
-   * Toggle language
-   */
-  toggleLanguage(): void {
+
+  public toggleLanguage(): void {
     const currentState = this._menuState.value;
     this._menuState.next({
       ...currentState,
-      language: currentState.language === 'en' ? 'fr' : 'en'
+      language: currentState.language === 'en' ? 'fr' : 'en',
     });
   }
 
-  /**
-   * Toggle large font
-   */
-  toggleLargeFont(): void {
+
+  public toggleLargeFont(): void {
     const currentState = this._menuState.value;
     this._menuState.next({
       ...currentState,
       accessibilityOptions: {
         ...currentState.accessibilityOptions,
-        largeFont: !currentState.accessibilityOptions.largeFont
-      }
+        largeFont: !currentState.accessibilityOptions.largeFont,
+      },
     });
   }
 
-  /**
-   * Toggle high contrast
-   */
-  toggleHighContrast(): void {
+
+  public toggleHighContrast(): void {
     const currentState = this._menuState.value;
     this._menuState.next({
       ...currentState,
       accessibilityOptions: {
         ...currentState.accessibilityOptions,
-        highContrast: !currentState.accessibilityOptions.highContrast
-      }
+        highContrast: !currentState.accessibilityOptions.highContrast,
+      },
     });
   }
 
-  /**
-   * Toggle notifications
-   */
-  toggleNotifications(): void {
+
+  public toggleNotifications(): void {
     const currentState = this._menuState.value;
     this._menuState.next({
       ...currentState,
       notificationsOpen: !currentState.notificationsOpen,
-      userProfileOpen: false // Close user profile when opening notifications
+      userProfileOpen: false, // Close user profile when opening notifications
     });
   }
 
-  /**
-   * Toggle user profile
-   */
-  toggleUserProfile(): void {
+  public toggleUserProfile(): void {
     const currentState = this._menuState.value;
     this._menuState.next({
       ...currentState,
       userProfileOpen: !currentState.userProfileOpen,
-      notificationsOpen: false // Close notifications when opening user profile
+      notificationsOpen: false, // Close notifications when opening user profile
     });
   }
 
-  /**
-   * Update navbar visibility based on scroll position
-   * @param scrollPosition Current scroll position
-   */
-  updateNavbarVisibility(scrollPosition: number): void {
-    const currentState = this._menuState.value;
-    const isScrollingDown = scrollPosition > currentState.lastScrollPosition;
+  public updateNavbarVisibility(scrollPosition: number): void {
+    const currentState: MenuState = this._menuState.value;
+    const isScrollingDown: boolean = scrollPosition > currentState.lastScrollPosition;
 
-    // Only hide navbar when scrolling down and not at the top of the page
-    const shouldHideNavbar = isScrollingDown && scrollPosition > 100;
+    const shouldHideNavbar: boolean = isScrollingDown && scrollPosition > 100;
 
     this._menuState.next({
       ...currentState,
       isNavbarVisible: !shouldHideNavbar,
-      lastScrollPosition: scrollPosition
+      lastScrollPosition: scrollPosition,
     });
   }
 
-  /**
-   * Update navbar styling based on background brightness
-   * @param isOnDarkBackground Whether the navbar is over a dark background
-   */
-  updateNavbarBackground(isOnDarkBackground: boolean): void {
+  public updateNavbarBackground(isOnDarkBackground: boolean): void {
     const currentState = this._menuState.value;
     this._menuState.next({
       ...currentState,
-      isOnDarkBackground
+      isOnDarkBackground,
     });
   }
 }

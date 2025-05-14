@@ -1,10 +1,9 @@
-import {Component} from '@angular/core';
-import {HeroesComponent} from '../../layout/heroes/heroes.component';
+import { Component } from '@angular/core';
 
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [HeroesComponent],
+  imports: [],
   templateUrl: './home.component.html',
 })
 export class HomeComponent {
