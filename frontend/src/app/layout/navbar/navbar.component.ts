@@ -50,7 +50,7 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
   private readonly subscriptions: Subscription = new Subscription();
 
   private scrollThrottleTimeout: any;
-  private readonly throttleTime = 100;
+  private readonly throttleTime: number = 0;
 
   constructor(
     @Inject(DOCUMENT) private readonly document: Document,
@@ -81,7 +81,7 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
 
     setTimeout((): void => {
       this.detectBackgroundBrightness();
-    }, 100);
+    }, 50);
   }
 
   ngOnDestroy(): void {
@@ -118,12 +118,10 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
 
   @HostListener('window:scroll', [])
   onWindowScroll(): void {
-    if (!this.scrollThrottleTimeout) {
-      this.scrollThrottleTimeout = setTimeout((): void => {
-        this.handleScroll();
-        this.scrollThrottleTimeout = null;
-      }, this.throttleTime);
-    }
+    this.scrollThrottleTimeout ??= setTimeout((): void => {
+      this.handleScroll();
+      this.scrollThrottleTimeout = null;
+    }, this.throttleTime);
   }
 
   public toggleMobileMenu(): void {
@@ -172,21 +170,6 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
     this.detectBackgroundBrightness();
   }
 
-  // private detectBackgroundBrightness(): void {
-  //   if (isPlatformBrowser(this.platformId)) {
-  //     const navbarHeight = this.elementRef.nativeElement.offsetHeight;
-  //     const elementBelowNavbar: Element | null = this.document.elementFromPoint(
-  //       window.innerWidth / 2,
-  //       navbarHeight + 5,
-  //     );
-  //
-  //     if (elementBelowNavbar) {
-  //       const bgColor: string = window.getComputedStyle(elementBelowNavbar).backgroundColor;
-  //       const isOnDarkBackground: boolean = this.isDarkColor(bgColor);
-  //       this._menuStateService.updateNavbarBackground(isOnDarkBackground);
-  //     }
-  //   }
-  // }
   private detectBackgroundBrightness(): void {
     if (isPlatformBrowser(this.platformId)) {
       const navbarHeight = this.elementRef.nativeElement.offsetHeight;
@@ -219,16 +202,12 @@ export class NavbarComponent implements OnInit, OnDestroy, AfterViewInit {
   }
 
   private isDarkColor(color: string): boolean {
-
     const rgbMatch = RegExp(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*[\d.]+)?\)/).exec(color);
-
     if (rgbMatch) {
       const r: number = parseInt(rgbMatch[1], 10);
       const g: number = parseInt(rgbMatch[2], 10);
       const b: number = parseInt(rgbMatch[3], 10);
-
       const brightness = (0.299 * r + 0.587 * g + 0.114 * b);
-
       return brightness < 128;
     }
     return false;
